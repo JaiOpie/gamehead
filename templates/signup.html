@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign In - Game Theme</title>
+  <style>
+    body {
+      font-family: 'Press Start 2P', Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #39ff14;
+      border-radius: 5px;
+      background-color: #000;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #39ff14;
+      border-radius: 3px;
+      background-color: #000;
+      color: #39ff14;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      background-color: #39ff14;
+      color: #000;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background-color 0.3s;
+    }
+
+    .form-group button:hover {
+      background-color: #31d309;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sign Up - Game Theme</h2>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phonenumber">Password:</label>
+        <input type="password" id="pass1" name="pass1" required>
+      </div>
+      <div class="form-group">
+        <label for="phonenumber">Password again:</label>
+        <input type="password" id="pass2" name="pass2" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">Sign In</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

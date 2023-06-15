@@ -1,0 +1,96 @@
+{% extends 'index.html' %}
+{% block title %}Add new Event{% endblock title %}
+{% block styles %}
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 2px solid #39ff14;
+  border-radius: 5px;
+  background-image: url("game_background.jpg");
+  background-size: cover;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 2px 2px #000;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #39ff14;
+  border-radius: 3px;
+  background-color: #000;
+  color: #39ff14;
+  font-family: 'Roboto', Arial, sans-serif; /* Change font family here */
+}
+
+.form-group input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #39ff14;
+  color: #000;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: 'Roboto', Arial, sans-serif; /* Change font family here */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s;
+}
+
+.form-group input[type="submit"]:hover {
+  background-color: #31d309;
+}
+{% endblock styles %}
+
+{% block body %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!-- Add font link here -->
+<div class="container">
+  <h2>Add Event - Game Theme</h2>
+  <form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="gamename">Game Name:</label>
+      <input type="text" id="gamename" name="gamename" required>
+    </div>
+    <div class="form-group">
+      <label for="ingamename">In-Game Name:</label>
+      <input type="text" id="in-game-name" name="ingamename" required>
+    </div>
+    <div class="form-group">
+      <label for="matchtype">Match Type:</label>
+      <select id="matchtype" name="matchtype" required>
+        <option value="" selected disabled>Select Match Type</option>
+        <option value="battleroyale">Battle Royale</option>
+        <option value="deathmatch">Deathmatch</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="amount">Amount:</label>
+      <input type="number" id="amount" name="amount" required>
+    </div>
+    <div class="form-group">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+{% endblock body %}

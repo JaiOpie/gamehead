@@ -1,0 +1,303 @@
+{% extends 'index.html' %}
+{% block title %}Event Details{% endblock title %}
+
+{% block styles %}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    position: relative; /* Added position relative */
+}
+
+.field-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.field-group label {
+    flex-basis: 150px;
+    font-weight: bold;
+}
+
+.field-group span {
+    color: #ccc;
+}
+
+.field-group input[type="text"] {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.field-group button[type="submit"] {
+    margin-left: 10px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.field-group button[type="submit"]:hover {
+    background-color: #c62828;
+}
+
+.popup-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+}
+
+.popup-form h2 {
+    color: #fff;
+    margin-top: 0;
+}
+
+.popup-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.popup-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.popup-form button[type="submit"],
+.popup-form button[type="button"] {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.popup-form button[type="submit"]:hover,
+.popup-form button[type="button"]:hover {
+    background-color: #c62828;
+}
+
+/* Additional styles for game-specific elements */
+.game-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.event-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.user-label {
+    display: flex;
+    align-items: center;
+}
+
+.user-label span {
+    margin-right: 5px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.status-active {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.status-inactive {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.match-type-label {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.match-solo {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.match-duo {
+    background-color: #ff9800;
+    color: #fff;
+}
+
+.match-squad {
+    background-color: #9c27b0;
+    color: #fff;
+}
+
+/* Added styles for user in-game names */
+.user1-in-game-label,
+.user2-in-game-label {
+    position: absolute;
+    top: 10px; /* Adjusted top position */
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    color: #0f0;
+    background-color: rgba(0, 0, 0, 0.8); /* Added background color */
+    border-radius: 5px; /* Added border radius */
+    z-index: 1; /* Added z-index to place it above other elements */
+}
+
+.user1-in-game-label {
+    left: 10px; /* Adjusted left position */
+}
+
+.user2-in-game-label {
+    right: 10px; /* Adjusted right position */
+}
+
+/* Added hover animation for match button */
+.match-button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    position: relative; /* Added position relative */
+    overflow: hidden; /* Added overflow hidden */
+    z-index: 1; /* Added z-index to place it above other elements */
+}
+
+.match-button:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: skewX(-45deg);
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.match-button:hover:before {
+    transform: skewX(0deg);
+    left: 0;
+}
+{% endblock styles %}
+
+{% block body %}
+<div class="container">
+    <div class="user1-in-game-label">{{ event.user1ingame }}</div> <!-- Added user 1 in game label -->
+    {% if event.user2ingame is none %}
+    <div class="user2-in-game-label">Yet to be matched</div> <!-- Added user 2 in game label -->
+    {% else %}
+    <div class="user2-in-game-label">{{ event.user2ingame }}</div>
+    {% endif %}
+    <form action="{% url 'update_room_id' event.id %}" method="post">
+        {% csrf_token %}
+        <div class="field-group">
+            <label>Game:</label>
+            <img class="game-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH-ZVA77kccpusAfVJoponfWiK2wzSpnOwTg&usqp=CAU" alt="Game Logo">
+        </div>
+        <div class="field-group">
+            <label>Match Type:</label>
+            <span class="match-type-label match-squad">{{ event.match_type }}</span>
+        </div>
+        <div class="field-group">
+            <label>Amount:</label>
+            <span id="amount">Rs.{{ event.amount }}</span>
+        </div>
+        <div class="field-group">
+            <label>Created by:</label>
+            <div class="user-label">
+                <span id="user">{{ event.user }}</span>
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Room ID:</label>
+            <span id="room-id">{{ event.room_id }}</span>
+        </div>
+        {% if event.user.id == request.user.id %}
+        <div class="field-group">
+            <label>New Room ID:</label>
+            <input type="text" name="new_room_id" placeholder="Enter new room ID">
+            <button type="submit">Update</button>
+        </div>
+        {% endif %}
+    </form>
+    {% if not event.is_match and event.user.id != request.user.id %}
+    <button class="match-button" onclick="openForm()">Tap here to match</button>
+    {% endif %}
+    {% if event.is_match and not event.is_completed and event.user.id == request.user.id %}
+    <button onclick="completeEvent()">Complete Event</button>
+    {% endif %}
+</div>
+</div>
+<div class="popup-form" id="popupForm">
+    <h2>Enter In-Game Name</h2>
+    <form action="{% url 'event_detail' event.id %}" method="post">
+        {% csrf_token %}
+        <div class="field-group">
+            <label>In-Game Name:</label>
+            <input type="text" name="ingame_name" placeholder="Enter your in-game name">
+        </div>
+        <button type="submit">Submit</button>
+        <button type="button" onclick="closeForm()">Cancel</button>
+    </form>
+</div>
+{% endblock body %}
+
+{% block scripts %}
+function completeEvent() {
+    if (confirm("Are you sure you want to complete this event?")) {
+        // Redirect to the URL that updates the is_complete field
+        window.location.href = "{% url 'complete_event' event.id %}";
+    }
+}
+
+function openForm() {
+    document.getElementById("popupForm").style.display = "block";
+}
+
+function closeForm() {
+    document.getElementById("popupForm").style.display = "none";
+}
+{% endblock scripts %}

@@ -1,0 +1,222 @@
+{% extends 'index.html' %}
+{% block title %}Profile{% endblock title %}
+{% block styles %}
+.tab-container {
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #111;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #090;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.tab-link {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab-link.active {
+  background-color: #0f0;
+  color: #000;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  color: #ccc;
+}
+
+.event-box {
+  position: relative;
+  background-color: #333;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  color: #fff;
+  font-family: Arial, sans-serif; /* Updated font */
+}
+
+
+.event-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  background-image: url('');
+  background-size: cover;
+  border: 2px solid green;
+}
+
+.event-box:hover .event-details {
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background overlay */
+  color: white; /* Set the text color to white */
+}
+
+.no-matches {
+  text-align: center;
+  color: #ccc;
+}
+.event-details {
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s; /* Add transition for smoother effect */
+}
+
+
+.event-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Updated font */
+}
+
+.event-info {
+  margin-bottom: 10px;
+}
+
+.event-info span {
+  display: block;
+  font-size: 14px;
+  color: #ccc;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Updated font */
+}
+
+.event-ready {
+  color: #4CAF50;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Updated font */
+  text-transform: uppercase;
+}
+
+.event-waiting {
+  color: #FF3D00;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Updated font */
+  text-transform: uppercase;
+}
+
+/* New styles for matched and unmatched events */
+.event-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.event-match-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Updated font */
+  text-transform: uppercase;
+}
+
+.event-matched {
+  background-color: #4CAF50;
+}
+
+.event-unmatched {
+  background-color: #FF3D00;
+}
+{% endblock styles %}
+
+{% block body %}
+<div class="tab-container">
+  <div class="tab-header">
+    <button class="tab-link active" onclick="openTab(event, 'upcoming')">Upcoming Matches</button>
+    <button class="tab-link" onclick="openTab(event, 'completed')">Completed Matches</button>
+  </div>
+  <div id="upcoming" class="tab-content" style="display: block;">
+    <h2>Upcoming Matches</h2>
+    <!-- Add content for upcoming matches here -->
+    {% if upcoming_matches %}
+    {% for event in upcoming_matches %}
+    <a href="/event/{{ event.id }}/">
+      <div class="event-box">
+        <div class="event-details">
+          <div class="event-status">
+            <span class="event-match-status {% if event.is_match %}event-matched{% else %}event-unmatched{% endif %}">
+              {% if event.is_match %}Ready for Battle{% else %}Waiting for Opponents{% endif %}
+            </span>
+          </div>
+          <div class="event-title">{{ event.game }}</div>
+          <div class="event-info">
+            <span>Event ID: {{ event.id }}</span>
+            <span>Created by: {{ event.user }}</span>
+            <span>Match type: {{ event.match_type }}</span>
+            <span>Amount: {{ event.amount }}</span>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+    {% else %}
+    <p class="no-matches">No upcoming matches found.</p>
+    {% endif %}
+  </div>
+
+  <div id="completed" class="tab-content">
+    <h2>Completed Matches</h2>
+    <!-- Add content for completed matches here -->
+    {% if completed_matches %}
+    {% for event in completed_matches %}
+    <div class="box">
+      <a href="/event/{{ event.id }}/">
+        <div class="event-box">
+          <div class="event-details">
+            <div class="event-status">
+              <span class="event-match-status {% if event.is_match %}event-matched{% else %}event-unmatched{% endif %}">
+                {% if event.is_match %}Completed{% endif %}
+              </span>
+            </div>
+            <div class="event-title">{{ event.game }}</div>
+            <div class="event-info">
+              <span>Event ID: {{ event.id }}</span>
+              <span>Created by: {{ event.user }}</span>
+              <span>Match type: {{ event.match_type }}</span>
+              <span>Amount: {{ event.amount }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <!-- Add more fields from the event model as needed -->
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="no-matches">No completed matches found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock body %}
+
+{% block scripts %}
+function openTab(event, tabName) {
+  var i, tabContent, tabLinks;
+  tabContent = document.getElementsByClassName("tab-content");
+  for (i = 0; i < tabContent.length; i++) {
+    tabContent[i].style.display = "none";
+  }
+  tabLinks = document.getElementsByClassName("tab-link");
+  for (i = 0; i < tabLinks.length; i++) {
+    tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  event.currentTarget.className += " active";
+}
+{% endblock scripts %}
